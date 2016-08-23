@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<openerp>
+    <data>
+
+        <record id="sale_order_expiration_reminder_cron_mail_template" model="mail.template">
+            <field name="name">Sale order expiration reminder</field>
+            <field name="email_from">${(object.user_id.email or '')|safe}</field>
+            <field name="subject">Sale order contract consultancy expiration reminder ${user.company_id.name}</field>
+            <field name="email_to">${object.user_id.email|safe}</field>
+            <field name="lang">${object.user_id.lang}</field>
+            <field name="model_id" model="ir.model" search="[('name', '=', 'sale.order')]"></field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+Hello ${object.user_id.name},
+% macro sale_order_table(values):
+<table cellspacing="1" border="1" cellpadding="4">
+    <tr>
+        <th>Customer</th>
+        <th>Sales Order</th>
+        <th>Expiration Date</th>
+        <th>Total amount</th>
+    </tr>
+    % for customer, sales_orders in values:
+        % for sales_order in sales_orders:
+        <tr>
+            <td>${customer.name}</td>
+            <td><a href="${ctx["base_url"]}/#action=${ctx["action_id"]}&id=${sales_order.id}&view_type=form">${sales_order.name}</a></td>
+            <td>${sales_order.consultancy_expiration_date}</td>
+            <td>${sales_order.amount_total} ${sales_order.currency_id.symbol}</td>
+        </tr>
+        % endfor
+    % endfor
+</table>
+% endmacro 
+% if "new" in ctx["data"]:
+    <h2>The following sales orders just expired: </h2>
+    ${sale_order_table(ctx["data"]["new"].iteritems())}
+% endif
+% if "old" in ctx["data"]:
+    <h2>The following expired sales orders are still not processed: </h2>
+    ${sale_order_table(ctx["data"]["old"].iteritems())}
+% endif
+% if "future" in ctx["data"]:
+    <h2>The following sales orders will expire in less than one month: </h2>
+    ${sale_order_table(ctx["data"]["future"].iteritems())}
+% endif
+
+<p>
+    Thanks,
+</p>
+<pre>
+-- 
+Odoo Automatic Email
+</pre>
+            ]]></field>
+        </record>
+
+        <record model="ir.cron" id="sale_order_consultancy_expiration_reminder_cron">
+            <field name="name">Sale order consultancy expiration reminder</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'sale.order'"/>
+            <field name="function" eval="'_cron_sale_order_consultancy_expiration_reminder'"/>
+            <field name="args" eval="'()'" />
+            <field name="nextcall" eval="(DateTime.now() + timedelta(days=(7 - DateTime.now().weekday()))).strftime('%Y-%m-%d 06:00:00')" />
+        </record>
+    </data>
+</openerp>
