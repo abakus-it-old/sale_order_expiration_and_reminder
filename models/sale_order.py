@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 class sale_order_expiration_reminder(models.Model):
     _inherit = 'sale.order'
     
-    consultancy_expiration_selection = fields.Selection(selection=[('not_applicable', 'Not Applicable'), ('in_progress', 'In Progress'), ('to_renew', 'To Renew'),('closed','Closed')], string='Expiration Management', default='not_applicable')
+    consultancy_expiration_selection = fields.Selection(selection=[('not_applicable', 'Not Applicable'), ('in_progress', 'In Progress'), ('to_renew', 'To Renew'),('closed','Closed')], string='Contract Consultancy Expiration', default='not_applicable')
     consultancy_expiration_date = fields.Date(string='Expiration date')
     consultancy_expiration_in_days = fields.Integer(string='Contract consultancy expiration in days', compute='_consultancy_expiration_in_days')
 
