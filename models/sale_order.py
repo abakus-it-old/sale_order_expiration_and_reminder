@@ -5,8 +5,8 @@ class sale_order_expiration_reminder(models.Model):
     _inherit = 'sale.order'
     
     consultancy_expiration_selection = fields.Selection(selection=[('not_applicable', 'Not Applicable'), ('in_progress', 'In Progress'), ('to_renew', 'To Renew'),('closed','Closed')], string='Contract Consultancy Expiration', default='not_applicable')
-    consultancy_expiration_date = fields.Date(string='Expiration date')
-    consultancy_expiration_in_days = fields.Integer(string='Contract consultancy expiration in days', compute='_consultancy_expiration_in_days')
+    consultancy_expiration_date = fields.Date(string='Contract Consultancy Expiration Date')
+    consultancy_expiration_in_days = fields.Integer(string='Contract Consultancy expiration in days', compute='_consultancy_expiration_in_days')
 
     @api.depends('consultancy_expiration_date')
     def _consultancy_expiration_in_days(self):
