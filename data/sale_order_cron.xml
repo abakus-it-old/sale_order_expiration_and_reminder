@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <openerp>
     <data>
-
         <record id="sale_order_expiration_reminder_cron_mail_template" model="mail.template">
             <field name="name">Sale order expiration reminder</field>
-            <field name="email_from">${(object.user_id.email or '')|safe}</field>
+            <field name="email_from">${(object.email or '')|safe}</field>
             <field name="subject">Sale order contract consultancy expiration reminder ${user.company_id.name}</field>
-            <field name="email_to">${object.user_id.email|safe}</field>
-            <field name="lang">${object.user_id.lang}</field>
-            <field name="model_id" model="ir.model" search="[('name', '=', 'sale.order')]"></field>
+            <field name="email_to">${object.email|safe}</field>
+            <field name="lang">${object.lang}</field>
+            <field name="model_id" ref="base.model_res_users"/>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[
-Hello ${object.user_id.name},
+Dear ${object.name},
 % macro sale_order_table(values):
 <table cellspacing="1" border="1" cellpadding="4">
     <tr>
         <th>Customer</th>
         <th>Sales Order</th>
         <th>Expiration Date</th>
-        <th>Total amount</th>
     </tr>
     % for customer, sales_orders in values:
         % for sales_order in sales_orders:
         <tr>
             <td>${customer.name}</td>
-            <td><a href="${ctx["base_url"]}/#action=${ctx["action_id"]}&id=${sales_order.id}&view_type=form">${sales_order.name}</a></td>
+            <td><a href="${ctx["base_url"]}/web#action=${ctx["action_id"]}&id=${sales_order.id}&view_type=form">${sales_order.name}</a></td>
             <td>${sales_order.consultancy_expiration_date}</td>
-            <td>${sales_order.amount_total} ${sales_order.currency_id.symbol}</td>
         </tr>
         % endfor
     % endfor
