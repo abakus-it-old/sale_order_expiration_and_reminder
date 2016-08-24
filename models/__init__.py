@@ -1,1 +1,3 @@
-from . import sale_order
+# -*- coding: utf-8 -*-
+
+import sale_order
