@@ -15,15 +15,21 @@ Dear ${object.name},
 <table cellspacing="1" border="1" cellpadding="4">
     <tr>
         <th>Customer</th>
-        <th>Sales Order</th>
+        <th>Ref</th>
         <th>Expiration Date</th>
+        <th>Status</th>
     </tr>
     % for customer, sales_orders in values:
         % for sales_order in sales_orders:
         <tr>
             <td>${customer.name}</td>
-            <td><a href="${ctx["base_url"]}/web#action=${ctx["action_id"]}&id=${sales_order.id}&view_type=form">${sales_order.name}</a></td>
+            <td>
+                ${sales_order.client_order_ref}
+                 - 
+                <a href="${ctx["base_url"]}/web#action=${ctx["action_id"]}&id=${sales_order.id}&view_type=form">${sales_order.name}</a>
+            </td>
             <td>${sales_order.consultancy_expiration_date}</td>
+            <td>${sales_order.consultancy_expiration_selection}</td>
         </tr>
         % endfor
     % endfor
