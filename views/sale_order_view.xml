@@ -6,11 +6,13 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//form/sheet/group/group[2]" position="after">
-                    <group string="Contract Consultancy">
-                        <field name="consultancy_expiration_selection" />
-                        <field name="consultancy_expiration_date" attrs="{'invisible': [('consultancy_expiration_selection', '=', 'not_applicable')]}"/>
-                    </group>
+                <xpath expr="//notebook[last()]" position="inside">
+                    <page string="Consultancy Contract">
+                        <group>
+                            <field name="consultancy_expiration_selection"/>
+                            <field name="consultancy_expiration_date" attrs="{'invisible': [('consultancy_expiration_selection', '=', 'not_applicable')]}"/>
+                        </group>
+                    </page>
                 </xpath>
             </field>
         </record>       
